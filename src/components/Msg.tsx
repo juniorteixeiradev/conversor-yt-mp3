@@ -20,4 +20,13 @@ export default function Msg(props:props){
             </div>
         )
     }
+    if(props.msg == "manyr"){
+        return(
+            <div
+            className=" text-sm font-light bg-violet-600 p-2 rounded-md border-solid border-2 border-violet-800"
+            >
+                Parece que você já converteu mais de 7 videos hoje, volte amanha e tente novamente 😓😓😓😓
+            </div>
+        )
+    }
 }

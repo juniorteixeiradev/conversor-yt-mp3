@@ -11,10 +11,13 @@ import Link from "next/link";
 
 
 export default function Home() {
+
+
   const ref = useRef<HTMLInputElement | any>(null);
 
   const [isLoading, setIsloading] = useState(false);
   const [sucess, setSucess] = useState<String>();
+  const [manyr, setManyr] = useState<String>();
 
   const { api } = useApi();
 
@@ -28,7 +31,6 @@ export default function Home() {
               throw err
           });
 
-          console.log({link: data.link})
           setSucess("ok")
           setIsloading(false)
           
@@ -40,7 +42,25 @@ export default function Home() {
           } else {
             setTimeout(async () =>{ 
               console.log({link: data.link})
+              const verData = await data.link;
+
+              if(verData != "") { //ver se tem link ou nao 
+                let valorAtual = localStorage.getItem("qtd");
+                
+                if(valorAtual == "" || valorAtual == null){
+                  
+                  localStorage.setItem("qtd", "0");
+                  // console.log("Nao existia valor foi atribuido:", localStorage.getItem("qtd"))
+                } else {
+                  const currentValue = parseInt(localStorage.getItem("qtd") || "0")
+                  
+                  localStorage.setItem("qtd", `${currentValue + 1}` )
+                  // console.log("existia valor, mas o avlor atual é:", localStorage.getItem("qtd"))
+                }
+              } 
+
               location.href = await data.link
+              
               setSucess(" ")
               ref.current.value = " "
             },2000)
@@ -60,8 +80,16 @@ async function formatarURL(url:string){
   const videoId:any = match && match[1];
   setIsloading(true);
   
-  chamaApi(videoId)
+  //eslint-ignore-next-line
+  if(parseInt(localStorage.getItem("qtd") || "") >= 7){
+    setManyr("manyr");
+    setTimeout(() =>{setIsloading(false)},2000);
+    setTimeout(() =>{setManyr(" ")},5000);
 
+  } else {
+    chamaApi(videoId)
+  }
+  
 }
 
   return (
@@ -97,6 +125,7 @@ async function formatarURL(url:string){
           onClick={() => formatarURL(ref.current?.value)}
           ></Button>
         </Container>
+        {manyr == "manyr" && <Msg msg="manyr"></Msg>}
         {sucess == "ok" && <Msg msg="ok"></Msg>}
         {sucess == "no" && <Msg msg="no"></Msg>}
       </Container>

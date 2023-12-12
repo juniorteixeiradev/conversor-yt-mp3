@@ -28,6 +28,7 @@ export default function Home() {
               throw err
           });
 
+          console.log({link: data.link})
           setSucess("ok")
           setIsloading(false)
           
@@ -54,7 +55,8 @@ export default function Home() {
 //funcão pra formatar a URL e pegar só o ID do video
 
 async function formatarURL(url:string){
-  const match = await url.match(/[?&]v=([^&]+)/);
+  // const match = await url.match(/[?&]v=([^&]+)/);
+  const match = await url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/);
   const videoId:any = match && match[1];
   setIsloading(true);
   
